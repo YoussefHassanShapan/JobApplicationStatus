@@ -1,0 +1,49 @@
+{
+  "name": "jobapplicationstatus",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^9",
+    "express": "^4",
+    "@sap-cloud-sdk/connectivity": "^3",
+    "@sap-cloud-sdk/http-client": "^3",
+    "@sap-cloud-sdk/resilience": "^3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2",
+    "@cap-js/cds-types": "^0.11.0"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "globals": {
+    "SELECT": true,
+    "INSERT": true,
+    "UPDATE": true,
+    "DELETE": true,
+    "CREATE": true,
+    "DROP": true,
+    "CDL": true,
+    "CQL": true,
+    "CXL": true,
+    "cds": true
+  },
+  "cds": {
+    "requires": {
+      "RCMJobApplication": {
+        "kind": "odata-v2",
+        "model": "srv/external/RCMJobApplication",
+        "credentials": {
+          "destination": "SFSF",
+          "path": "/odata/v2"
+        }
+      }
+    }
+  }
+}
