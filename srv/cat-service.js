@@ -10,31 +10,33 @@ module.exports = async function (srv) {
 
 
    // ✅ Combined status with label
-   srv.on('READ', 'JobApplicationStatusesWithLabels', async (req) => {
+   srv.on('READ', 'JobApplicationStatusesWithLabels', async req => {
     const tx = RCMJobApplicationService.transaction(req);
-
+  
     const statuses = await tx.run(SELECT.from('RCMJobApplication.JobApplicationStatus'));
     const allLabels = await tx.run(SELECT.from('RCMJobApplication.JobApplicationStatusLabel'));
-
+  
+    // Map appStatusId → first available non-null label
     const labelMap = new Map();
-
     for (const label of allLabels) {
-      if (!labelMap.has(label.appStatusId) && label.statusLabel?.trim()) {
+      if (!labelMap.has(label.appStatusId) && label.statusLabel) {
         labelMap.set(label.appStatusId, label.statusLabel);
       }
     }
-
-    const result = [];
-
+  
+    // 🧠 Use a Map to deduplicate by appStatusId
+    const statusMap = new Map();
     for (const status of statuses) {
-      const label = labelMap.get(status.appStatusId) || '[No Label]';
-      result.push({
-        appStatusId: status.appStatusId,
-        appStatusName: status.appStatusName,
-        statusLabel: label
-      });
+      if (!statusMap.has(status.appStatusId)) {
+        statusMap.set(status.appStatusId, {
+          appStatusId: status.appStatusId,
+          appStatusName: status.appStatusName,
+          statusLabel: labelMap.get(status.appStatusId) || '[No Label]'
+        });
+      }
     }
-
-    return result;
+  
+    // Return only distinct statuses
+    return Array.from(statusMap.values());
   });
 };

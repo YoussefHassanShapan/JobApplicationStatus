@@ -5,19 +5,37 @@
     xmlns:l="sap.ui.layout">
     
     <Page id="page" title="Select Application Status">
-        <l:VerticalLayout class="sapUiContentPadding">
+        <l:VerticalLayout id="mainLayout" class="sapUiContentPadding" width="100%">
+            
+            <!-- Styled Input with Value Help -->
             <Input
                 id="statusInput"
                 placeholder="Select Status"
                 showValueHelp="true"
+                showSuggestion="true"
+                suggestionItems="{/JobApplicationStatusesWithLabels}"
                 valueHelpRequest=".onStatusValueHelp"
-                value="{viewModel>/selectedStatusLabel}" />
-        </l:VerticalLayout>
+                value="{viewModel>/selectedStatusLabel}">
+                <suggestionItems>
+                    <core:Item text="{statusLabel}" />
+                </suggestionItems>
+            </Input>
 
-        <Panel visible="{= !!${viewModel>/selectedStatusLabel} }" headerText="Selected Status">
-            <Text text="Status ID: {viewModel>/selectedStatusId}" />
-            <Text text="Status Name: {viewModel>/selectedStatusName}" />
-            <Text text="Status Label: {viewModel>/selectedStatusLabel}" />
-        </Panel>
+            <!-- Stylized Panel showing selected status info -->
+            <Panel
+                id="statusPanel"
+                visible="{= !!${viewModel>/selectedStatusLabel} }"
+                headerText="Selected Status"
+                class="sapUiResponsiveMargin"
+                width="auto">
+                
+                <l:VerticalLayout width="100%" class="sapUiSmallMargin">
+                    <Text text="Status ID: {viewModel>/selectedStatusId}" />
+                    <Text text="Status Name: {viewModel>/selectedStatusName}" />
+                    <Text text="Status Label: {viewModel>/selectedStatusLabel}" />
+                </l:VerticalLayout>
+            </Panel>
+
+        </l:VerticalLayout>
     </Page>
 </mvc:View>
