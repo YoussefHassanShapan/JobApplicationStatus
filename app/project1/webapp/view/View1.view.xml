@@ -1,0 +1,23 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+    controllerName="project1.controller.View1"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    
+    <Page id="page" title="Select Application Status">
+        <l:VerticalLayout class="sapUiContentPadding">
+            <Input
+                id="statusInput"
+                placeholder="Select Status"
+                showValueHelp="true"
+                valueHelpRequest=".onStatusValueHelp"
+                value="{viewModel>/selectedStatusLabel}" />
+        </l:VerticalLayout>
+
+        <Panel visible="{= !!${viewModel>/selectedStatusLabel} }" headerText="Selected Status">
+            <Text text="Status ID: {viewModel>/selectedStatusId}" />
+            <Text text="Status Name: {viewModel>/selectedStatusName}" />
+            <Text text="Status Label: {viewModel>/selectedStatusLabel}" />
+        </Panel>
+    </Page>
+</mvc:View>

@@ -1,0 +1,15 @@
+/* Enter your custom styles here */
+.Margin{
+    margin-top: 20px;
+}
+.items{
+    margin-bottom: 10px;
+}
+.headers{
+    /* color: rgb(121, 158, 200); */
+    font-size: 25px;
+}
+.btn{
+    margin-bottom: 10px;
+float: right;
+}
