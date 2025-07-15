@@ -17,7 +17,8 @@ sap.ui.define([
             const oViewModel = new JSONModel({
                 selectedStatusId: "",
                 selectedStatusName: "",
-                selectedStatusLabel: ""
+                selectedStatusLabel: "",
+                Candidates: []
             });
             this.getView().setModel(oViewModel, "viewModel");
         },
@@ -52,7 +53,7 @@ sap.ui.define([
                     content: [oTable],
                     beginButton: new Button({
                         text: "OK",
-                        press: () => {
+                        press: async () => {
                             const oSelectedItem = this.byId("StatusTable").getSelectedItem();
                             if (oSelectedItem) {
                                 const oContext = oSelectedItem.getBindingContext();
@@ -64,6 +65,9 @@ sap.ui.define([
                                 viewModel.setProperty("/selectedStatusLabel", oData.statusLabel);
 
                                 this.byId("statusInput").setValue(oData.statusLabel);
+
+                                await this._loadCandidates(oData.appStatusId);
+
                                 this._oStatusDialog.close();
                             } else {
                                 MessageBox.warning("Please select a status.");
@@ -78,12 +82,37 @@ sap.ui.define([
                     })
                 });
 
-                const oODataModel = this.getOwnerComponent().getModel(); // mainService
+                const oODataModel = this.getOwnerComponent().getModel();
                 this._oStatusDialog.setModel(oODataModel);
                 this.getView().addDependent(this._oStatusDialog);
             }
 
             this._oStatusDialog.open();
+        },
+
+        _loadCandidates: async function (statusId) {
+            const oModel = this.getView().getModel(); // Should be OData V4 model
+            const viewModel = this.getView().getModel("viewModel");
+        
+            try {
+                const oListBinding = oModel.bindList("/CandidatesByStatus", undefined, undefined, [
+                    new sap.ui.model.Filter("appStatusId", "EQ", statusId)
+                ]);
+                const aContexts = await oListBinding.requestContexts();
+                const aCandidates = aContexts.map(ctx => ctx.getObject());
+        
+                if (aCandidates.length) {
+                    viewModel.setProperty("/Candidates", aCandidates);
+                } else {
+                    viewModel.setProperty("/Candidates", []);
+                    sap.m.MessageBox.information("No candidates found for the selected status.");
+                }
+            } catch (err) {
+                console.error("Failed to load candidates:", err);
+                sap.m.MessageBox.error("Failed to load candidates.");
+            }
         }
+        
+        
     });
 });

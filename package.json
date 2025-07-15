@@ -45,6 +45,14 @@
           "destination": "SFSF",
           "path": "/odata/v2"
         }
+      },
+      "RCMCandidate": {
+        "kind": "odata-v2",
+        "model": "srv/external/RCMCandidate",
+        "credentials": {
+          "destination": "SFSF",
+          "path": "/odata/v2"
+        }
       }
     }
   }

@@ -1,13 +1,14 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc"
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
     controllerName="project1.controller.View1"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout">
-    
+
     <Page id="page" title="Select Application Status">
-        <l:VerticalLayout id="mainLayout" class="sapUiContentPadding" width="100%">
-            
-            <!-- Styled Input with Value Help -->
+        <l:VerticalLayout class="sapUiContentPadding" width="100%">
+
+            <!-- Dropdown Input for Status Selection -->
             <Input
                 id="statusInput"
                 placeholder="Select Status"
@@ -21,20 +22,30 @@
                 </suggestionItems>
             </Input>
 
-            <!-- Stylized Panel showing selected status info -->
-            <Panel
-                id="statusPanel"
-                visible="{= !!${viewModel>/selectedStatusLabel} }"
-                headerText="Selected Status"
-                class="sapUiResponsiveMargin"
-                width="auto">
-                
-                <l:VerticalLayout width="100%" class="sapUiSmallMargin">
-                    <Text text="Status ID: {viewModel>/selectedStatusId}" />
-                    <Text text="Status Name: {viewModel>/selectedStatusName}" />
-                    <Text text="Status Label: {viewModel>/selectedStatusLabel}" />
-                </l:VerticalLayout>
-            </Panel>
+            <!-- Status Info Text -->
+            <Text text="Status ID: {viewModel>/selectedStatusId}" visible="{= !!${viewModel>/selectedStatusLabel} }"/>
+            <Text text="Status Name: {viewModel>/selectedStatusName}" visible="{= !!${viewModel>/selectedStatusLabel} }"/>
+            <Text text="Status Label: {viewModel>/selectedStatusLabel}" visible="{= !!${viewModel>/selectedStatusLabel} }"/>
+
+            <!-- Candidate Table (shown only when results are present) -->
+            <Table id="candidateTable" items="{viewModel>/Candidates}" visible="{= ${viewModel>/Candidates}.length > 0 }">
+                <columns>
+                    <Column><Text text="Candidate ID" /></Column>
+                    <Column><Text text="First Name" /></Column>
+                    <Column><Text text="Last Name" /></Column>
+                    <Column><Text text="Email" /></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{candidateId}" />
+                            <Text text="{firstName}" />
+                            <Text text="{lastName}" />
+                            <Text text="{email}" />       
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
 
         </l:VerticalLayout>
     </Page>
