@@ -40,7 +40,7 @@
     "requires": {
       "RCMJobApplication": {
         "kind": "odata-v2",
-        "model": "srv/external/RCMJobApplication",
+        "model": "srv/external/RCMJobApplication",      "mocked": true,
         "credentials": {
           "destination": "SFSF",
           "path": "/odata/v2"
@@ -48,7 +48,8 @@
       },
       "RCMCandidate": {
         "kind": "odata-v2",
-        "model": "srv/external/RCMCandidate",
+        "model": "srv/external/RCMCandidate",      "mocked": true,
+
         "credentials": {
           "destination": "SFSF",
           "path": "/odata/v2"

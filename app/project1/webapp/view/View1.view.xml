@@ -28,24 +28,25 @@
             <Text text="Status Label: {viewModel>/selectedStatusLabel}" visible="{= !!${viewModel>/selectedStatusLabel} }"/>
 
             <!-- Candidate Table (shown only when results are present) -->
-            <Table id="candidateTable" items="{viewModel>/Candidates}" visible="{= ${viewModel>/Candidates}.length > 0 }">
-                <columns>
-                    <Column><Text text="Candidate ID" /></Column>
-                    <Column><Text text="First Name" /></Column>
-                    <Column><Text text="Last Name" /></Column>
-                    <Column><Text text="Email" /></Column>
-                </columns>
-                <items>
-                    <ColumnListItem>
-                        <cells>
-                            <Text text="{candidateId}" />
-                            <Text text="{firstName}" />
-                            <Text text="{lastName}" />
-                            <Text text="{email}" />       
-                        </cells>
-                    </ColumnListItem>
-                </items>
-            </Table>
+          <Table id="candidateTable" items="{viewModel>/Candidates}" visible="{= ${viewModel>/Candidates}.length > 0 }">
+    <columns>
+        <Column><Text text="Candidate ID" /></Column>
+        <Column><Text text="First Name" /></Column>
+        <Column><Text text="Last Name" /></Column>
+        <Column><Text text="Email" /></Column>
+    </columns>
+    <items>
+        <ColumnListItem>
+            <cells>
+                <Text text="{candidateId}" />
+                <Text text="{firstName}" />
+                <Text text="{lastName}" />
+                <Text text="{email}" />       
+            </cells>
+        </ColumnListItem>
+    </items>
+</Table>
+
 
         </l:VerticalLayout>
     </Page>

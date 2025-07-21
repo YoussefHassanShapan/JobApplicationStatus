@@ -37,31 +37,27 @@ module.exports = async function (srv) {
   srv.on('READ', 'CandidatesByStatus', async req => {
     const { appStatusId } = req.data;
     if (!appStatusId) return [];
-  
+
     const txJobApp = RCMJobApplicationService.transaction(req);
     const txCandidate = RCMCandidateService.transaction(req);
-  
-    // Get job applications with the given status
+
     const applications = await txJobApp.run(
       SELECT.from('RCMJobApplication.JobApplication').where({ appStatusSetItemId: appStatusId })
     );
-  
+
     if (!applications.length) return [];
-  
-    // Get unique usersSysIds from applications
-    const usersSysIds = [...new Set(applications.map(app => app.usersSysId).filter(Boolean))];
-  
-    // Get corresponding candidates by usersSysId
+
+    const candidateIds = [...new Set(applications.map(app => app.candidateId).filter(Boolean))];
+
     const candidates = await txCandidate.run(
-      SELECT.from('RCMCandidate.Candidate').where('usersSysId in', usersSysIds)
+      SELECT.from('RCMCandidate.Candidate').where('candidateId in', candidateIds)
     );
-  
-    // Match applications to candidates by usersSysId
+
     return applications.map(app => {
-      const candidate = candidates.find(c => c.usersSysId === app.usersSysId);
+      const candidate = candidates.find(c => c.candidateId === app.candidateId);
       return {
         applicationId: app.applicationId,
-        usersSysId: app.usersSysId,
+        candidateId: app.candidateId,
         appStatusId: app.appStatusSetItemId,
         firstName: candidate?.firstName || '',
         lastName: candidate?.lastName || '',
@@ -69,6 +65,30 @@ module.exports = async function (srv) {
       };
     });
   });
+  srv.on('READ', 'TestAppStatusLink', async (req) => {
+    const tx = cds.transaction(req);
+    const jobApps = await tx.run(SELECT.from('RCMJobApplication.JobApplication'));
+    const statuses = await tx.run(SELECT.from('RCMJobApplication.JobApplicationStatus'));
   
-
+    const statusMap = new Map();
+    for (const status of statuses) {
+      statusMap.set(status.appStatusId, status);
+    }
+  
+    const matches = [];
+  
+    for (const app of jobApps) {
+      const status = statusMap.get(app.appStatusSetItemId);
+      if (status) {
+        matches.push({
+          applicationId: app.applicationId,
+          appStatusSetItemId: app.appStatusSetItemId,
+          matchedStatusName: status.appStatusName
+        });
+      }
+    }
+  
+    return matches.slice(0, 50); // Limit results
+  });
+  
 };
